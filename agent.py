@@ -23,6 +23,7 @@ class Agent:
         if os.path.exists("C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"):
             self.model.load_state_dict(torch.load('C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth'))
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
+        self.decayStep = 0
 
 
     def get_state(self, game: Game):
@@ -72,7 +73,7 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon = 80 - self.n_games
+        self.epsilon =  data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(-data.decayRate * self.decayStep)
         final_move = [0,0,0,0]
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 3)
@@ -82,7 +83,7 @@ class Agent:
             prediction = self.model(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
-
+        self.decayStep +=1
         return final_move
 
 
