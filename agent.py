@@ -20,8 +20,8 @@ class Agent:
         self.gamma = 0.9 # discount rate
         self.memory = deque(maxlen=MAX_MEMORY) # popleft()
         self.model = Linear_QNet(9, data.hiddenSize, 4)
-        if os.path.exists("C:\Users\Kooter\Documents\VSC Projects\A.I\snake - kopie\model\model.pth"):
-            self.model.load_state_dict(torch.load('C:\Users\Kooter\Documents\VSC Projects\A.I\snake - kopie\model\model.pth'))
+        if os.path.exists("C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"):
+            self.model.load_state_dict(torch.load('C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth'))
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
 
