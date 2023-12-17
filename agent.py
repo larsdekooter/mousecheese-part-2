@@ -121,7 +121,7 @@ def train():
                 record = score
                 agent.model.save()
 
-            print('Game', agent.n_games, 'Won', score,)
+            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon)
 
             plot_scores.append(score)
             total_score += score
