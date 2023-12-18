@@ -75,7 +75,7 @@ class Agent:
         # random moves: tradeoff exploration / exploitation
         self.epsilon =  data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(-data.decayRate * self.decayStep)
         final_move = [0,0,0,0]
-        if random.randint(0, 200) < self.epsilon:
+        if np.random.rand() < self.epsilon:
             move = random.randint(0, 3)
             final_move[move] = 1
         else:
