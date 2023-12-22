@@ -24,6 +24,8 @@ class Agent:
             self.model.load_state_dict(torch.load('C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth'))
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
         self.decayStep = 0
+        self.aiMoves = 0
+        self.randomMoves = 0
 
 
     def get_state(self, game: Game):
@@ -75,14 +77,16 @@ class Agent:
         # random moves: tradeoff exploration / exploitation
         self.epsilon =  data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(-data.decayRate * self.decayStep)
         final_move = [0,0,0,0]
-        if random.randint(0, 200) < self.epsilon:
+        if np.random.rand() < self.epsilon:
             move = random.randint(0, 3)
             final_move[move] = 1
+            self.randomMoves += 1
         else:
             state0 = torch.tensor(state, dtype=torch.float)
             prediction = self.model(state0)
             move = torch.argmax(prediction).item()
             final_move[move] = 1
+            self.aiMoves += 1
         self.decayStep +=1
         return final_move
 
@@ -121,7 +125,7 @@ def train():
                 record = score
                 agent.model.save()
 
-            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon)
+            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round((agent.aiMoves / (agent.aiMoves + agent.randomMoves) * 100.0), 5))
 
             plot_scores.append(score)
             total_score += score
