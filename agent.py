@@ -117,6 +117,11 @@ def train():
 
         if done:
             # train long memory, plot result
+            aiMoves = agent.aiMoves
+            randomMoves = agent.randomMoves
+            totalMoves = aiMoves + randomMoves
+            agent.aiMoves = 0
+            agent.randomMoves = 0
             game.reset()
             agent.n_games += 1
             agent.train_long_memory()
@@ -125,9 +130,7 @@ def train():
                 record = score
                 agent.model.save()
 
-            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round((agent.aiMoves / (agent.aiMoves + agent.randomMoves) * 100.0), 5))
-            agent.aiMoves = 0
-            agent.randomMoves = 0
+            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5))
             plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.n_games
