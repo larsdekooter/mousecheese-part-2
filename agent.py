@@ -130,7 +130,7 @@ def train():
                 record = score
                 agent.model.save()
 
-            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5))
+            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), aiMoves, totalMoves)
             plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.n_games
