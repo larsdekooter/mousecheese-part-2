@@ -79,7 +79,7 @@ class Agent:
         final_move = [0,0,0,0]
         if np.random.rand() < self.epsilon:
             move = random.randint(0, 3)
-            final_move[move] = 1
+            final_move[3] = 1
             self.randomMoves += 1
         else:
             state0 = torch.tensor(state, dtype=torch.float)
