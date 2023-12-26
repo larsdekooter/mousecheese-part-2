@@ -13,7 +13,7 @@ random = 200
 testLength = 6000
 invalidMovePunishment = -10000
 greaterThan = 0.1
-
+decayStep = 4
 def getDistanceReward(distance):
     return 1.02 ** -distance  # Slightly increased reward decay
 

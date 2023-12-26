@@ -87,7 +87,7 @@ class Agent:
             move = torch.argmax(prediction).item()
             final_move[move] = 1
             self.aiMoves += 1
-        self.decayStep +=1
+        self.decayStep += data.decayStep
         return final_move
 
 
