@@ -79,7 +79,7 @@ class Agent:
         final_move = [0,0,0,0]
         if np.random.rand() < self.epsilon:
             move = random.randint(0, 3)
-            final_move[3] = 1
+            final_move[move] = 1
             self.randomMoves += 1
         else:
             state0 = torch.tensor(state, dtype=torch.float)
@@ -131,7 +131,7 @@ def train():
                 record = score
                 agent.model.save()
 
-            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), aiMoves, totalMoves, final_move, x, y)
+            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
             plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.n_games
