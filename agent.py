@@ -148,7 +148,7 @@ if __name__ == '__main__':
     for i in range(50):
         gamma = random.random()
         lr = random.uniform(0.0001, 0.1)
-        maxMemory = random.uniform(10, 1_000_000)
+        maxMemory = int(random.uniform(10, 1_000_000))
         hiddenSize = 2 ** random.randint(2, 16)
         won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames)
         gameList.append([won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames])
