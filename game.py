@@ -27,8 +27,7 @@ class Game:
         done = self.checkDeath()
         reward, done, won = self.getReward(done)
 
-        return done, reward, won
-
+        return reward, done, won
     def getReward(self, done):
         reward = 0
         distance = self.getDistanceToCheese()
