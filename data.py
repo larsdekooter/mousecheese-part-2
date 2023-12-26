@@ -3,6 +3,7 @@ cooldown = 0
 cheeseReward = 1000000
 rewardNerf = 5
 gamma = 0.9
+maxMemory = 100_000
 hiddenSize = 64  # Increased hidden layer size for more capacity
 lr = 0.0001  # Adjusted learning rate for stability
 maxEpsilon = 1
@@ -20,3 +21,4 @@ def getDistanceReward(distance):
 def getEfficiencyPenalty(distance):
     return 0.005 * distance  # Reduced efficiency penalty for exploration
 
+numberOfGames = 5400

@@ -14,15 +14,15 @@ LR = 0.001
 
 class Agent:
 
-    def __init__(self):
+    def __init__(self, gamma, lr, maxMemory, hiddenSize):
         self.n_games = 0
         self.epsilon = 0 # randomness
-        self.gamma = 0.9 # discount rate
-        self.memory = deque(maxlen=MAX_MEMORY) # popleft()
-        self.model = Linear_QNet(9, data.hiddenSize, 4)
+        self.gamma = gamma # discount rate
+        self.memory = deque(maxlen=maxMemory) # popleft()
+        self.model = Linear_QNet(9, hiddenSize, 4)
         if os.path.exists("C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"):
             self.model.load_state_dict(torch.load('C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth'))
-        self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
+        self.trainer = QTrainer(self.model, lr=lr, gamma=gamma)
         self.decayStep = 0
         self.aiMoves = 0
         self.randomMoves = 0
@@ -60,8 +60,8 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done)) # popleft if MAX_MEMORY is reached
 
     def train_long_memory(self):
-        if len(self.memory) > BATCH_SIZE:
-            mini_sample = random.sample(self.memory, BATCH_SIZE) # list of tuples
+        if len(self.memory) > data.batchSize:
+            mini_sample = random.sample(self.memory, data.batchSize) # list of tuples
         else:
             mini_sample = self.memory
 
@@ -91,14 +91,14 @@ class Agent:
         return final_move
 
 
-def train():
+def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
-    record = 0
-    agent = Agent()
+    won = False
+    agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
-    while True:
+    while agent.n_games < numberOfGames:
         # get old state
         state_old = agent.get_state(game)
 
@@ -127,17 +127,29 @@ def train():
             agent.n_games += 1
             agent.train_long_memory()
 
-            if score > record:
-                record = score
+            if won:
                 agent.model.save()
+                return True, agent.n_games
 
-            print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
+            if agent.n_games % (data.numberOfGames / 10) == 0:
+                print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
             plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.n_games
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
 
+    return False, agent.n_games
 
 if __name__ == '__main__':
-    train()
+    gameList = []
+    won, nGames = train(data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames)
+    gameList.append([won, nGames, data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames])
+    for i in range(50):
+        gamma = random.random()
+        lr = random.uniform(0.0001, 0.1)
+        maxMemory = random.uniform(10, 1_000_000)
+        hiddenSize = 2 ** random.randint(2, 16)
+        won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames)
+        gameList.append([won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames])
+    print(gameList)
