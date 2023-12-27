@@ -12,8 +12,9 @@ from tqdm import trange
 with io.StringIO() as output:
     sys.stdout = output
     if output.getvalue().startswith("ALSA"):
-        return
-    print(output.getvalue())
+        pass
+    else:
+        print(output.getvalue())
 
 
 MAX_MEMORY = 100_000
