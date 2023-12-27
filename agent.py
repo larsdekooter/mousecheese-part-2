@@ -10,18 +10,22 @@ import os
 from tqdm import trange
 import io
 import sys
-import re
+from logfilter import OutputFilter
+import logging
 
-# Capture the entire input
-input_string = sys.stdin.read().decode('utf-8')
+# -- log all output to myapp.log
+logging.basicConfig(filename='myapp.log', level=logging.DEBUG)
+# -- OR log all output to console
+logging.basicConfig(level=logging.DEBUG)
+# route all output to logging
+logging.captureWarnings(True)
+print  = logging.info  
 
-filtered_output = ''
-
-for line in input_string.splitlines():
-    if not re.match('^ALSA', line):
-        filtered_output += line
-
-print('Filtered output:', filtered_output)
+flt = OutputFilter(['ALSA', 'INFO*'])
+logger = logging.getLogger() # root logger
+logger.addFilter(flt)
+warnLogger = logging.getLogger('py.warnings') # warnings logger
+warnLogger.addFilter(flt)
 
 
 
