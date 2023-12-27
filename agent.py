@@ -7,7 +7,8 @@ from model import Linear_QNet, QTrainer
 from helper import plot
 import data
 import os
-from tqdm import tqdm
+from tqdm import trange
+
 
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
@@ -99,7 +100,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
     won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
-    for i in tqdm(range(numberOfGames)):
+    for i in trange(numberOfGames):
         # get old state
         state_old = agent.get_state(game)
 
