@@ -9,6 +9,8 @@ import data
 import os
 from tqdm import trange
 
+os.environ['ALSA_CONFIG_PATH'] = '/dev/null'
+
 
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
