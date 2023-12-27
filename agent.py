@@ -8,6 +8,7 @@ from helper import plot
 import data
 import os
 from tqdm import trange
+import io
 
 with io.StringIO() as output:
     sys.stdout = output
