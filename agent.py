@@ -12,21 +12,17 @@ import io
 import sys
 import re
 
-with io.StringIO() as output:
-    sys.stdout = output
+# Capture the entire input
+input_string = sys.stdin.read().decode('utf-8')
 
-    filtered_output = ''
+filtered_output = ''
 
-    for line in sys.stdin.readlines():
-        if not re.match('^specific_word', line.decode('utf-8')):
-            filtered_output += line
+for line in input_string.splitlines():
+    if not re.match('^ALSA', line):
+        filtered_output += line
 
-    # Close the StringIO object
-    output.close()
+print('Filtered output:', filtered_output)
 
-    sys.stdout = sys.__stdout__
-
-    print('Filtered output:', filtered_output.decode('utf-8'))
 
 
 
