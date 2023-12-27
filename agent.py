@@ -21,9 +21,13 @@ with io.StringIO() as output:
         if not re.match('^ALSA', line):
             filtered_output += line
 
+    # Close the StringIO object
+    output.close()
+
     sys.stdout = sys.__stdout__
 
-    print(filtered_output)
+    print('Filtered output:', filtered_output)
+
 
 
 
