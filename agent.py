@@ -17,8 +17,8 @@ with io.StringIO() as output:
 
     filtered_output = ''
 
-    for line in sys.stdin:
-        if not re.match('^ALSA', line):
+    for line in sys.stdin.readlines():
+        if not re.match('^specific_word', line.decode('utf-8')):
             filtered_output += line
 
     # Close the StringIO object
@@ -26,7 +26,7 @@ with io.StringIO() as output:
 
     sys.stdout = sys.__stdout__
 
-    print('Filtered output:', filtered_output)
+    print('Filtered output:', filtered_output.decode('utf-8'))
 
 
 
