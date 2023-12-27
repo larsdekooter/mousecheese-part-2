@@ -8,29 +8,6 @@ from helper import plot
 import data
 import os
 from tqdm import trange
-import io
-import sys
-from logfilter import OutputFilter
-import logging
-
-# -- log all output to myapp.log
-logging.basicConfig(filename='myapp.log', level=logging.DEBUG)
-# -- OR log all output to console
-logging.basicConfig(level=logging.DEBUG)
-# route all output to logging
-logging.captureWarnings(True)
-print  = logging.info  
-
-flt = OutputFilter(['ALSA', 'INFO*'])
-logger = logging.getLogger() # root logger
-logger.addFilter(flt)
-warnLogger = logging.getLogger('py.warnings') # warnings logger
-warnLogger.addFilter(flt)
-
-
-
-
-
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
 LR = 0.001
