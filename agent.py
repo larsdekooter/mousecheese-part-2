@@ -9,7 +9,11 @@ import data
 import os
 from tqdm import trange
 
-os.environ['ALSA_CONFIG_PATH'] = '/dev/null'
+with io.StringIO() as output:
+    sys.stdout = output
+    if(output.getvalue().startswith("ALSA"):
+        return
+    print(output.getvalue())
 
 
 MAX_MEMORY = 100_000
