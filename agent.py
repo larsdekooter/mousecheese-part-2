@@ -11,7 +11,7 @@ from tqdm import trange
 
 with io.StringIO() as output:
     sys.stdout = output
-    if(output.getvalue().startswith("ALSA"):
+    if output.getvalue().startswith("ALSA"):
         return
     print(output.getvalue())
 
