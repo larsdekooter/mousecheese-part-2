@@ -7,6 +7,7 @@ from model import Linear_QNet, QTrainer
 from helper import plot
 import data
 import os
+from tqdm import tqdm
 
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
@@ -98,7 +99,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
     won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
-    while agent.n_games < numberOfGames:
+    for i in tqdm(range(numberOfGames)):
         # get old state
         state_old = agent.get_state(game)
 
@@ -131,8 +132,8 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
                 agent.model.save()
                 return True, agent.n_games
 
-            if agent.n_games % (data.numberOfGames / 10) == 0:
-                print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
+            #if agent.n_games % (data.numberOfGames / 10) == 0:
+                #print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
             plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.n_games
