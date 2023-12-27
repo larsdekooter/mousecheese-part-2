@@ -10,13 +10,21 @@ import os
 from tqdm import trange
 import io
 import sys
+import re
 
 with io.StringIO() as output:
     sys.stdout = output
-    if output.getvalue().startswith("ALSA"):
-        pass
-    else:
-        print(output.getvalue())
+
+    filtered_output = ''
+
+    for line in sys.stdin:
+        if not re.match('^ALSA', line):
+            filtered_output += line
+
+    sys.stdout = sys.__stdout__
+
+    print(filtered_output)
+
 
 
 MAX_MEMORY = 100_000
