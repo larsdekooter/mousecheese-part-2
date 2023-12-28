@@ -98,6 +98,8 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
     won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
+    wonRound = False
+    gameWhenWon = numberOfGames
     for i in trange(numberOfGames):
         # get old state
         state_old = agent.get_state(game)
@@ -129,7 +131,8 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
 
             if won:
                 agent.model.save()
-                return True, agent.n_games
+                wonRound = True
+                gameWhenWon = agent.n_games
 
             #if agent.n_games % (data.numberOfGames / 10) == 0:
                 #print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
@@ -139,8 +142,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
             plot_mean_scores.append(mean_score)
             plot(plot_scores, plot_mean_scores)
 
-    return False, agent.n_games
-
+    return wonRound, gameWhenWon
 if __name__ == '__main__':
     gameList = []
     won, nGames = train(data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames)
