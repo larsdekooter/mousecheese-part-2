@@ -92,9 +92,6 @@ class Agent:
 
 
 def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
-    plot_scores = []
-    plot_mean_scores = []
-    total_score = 0
     # won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
