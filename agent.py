@@ -95,7 +95,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
     plot_scores = []
     plot_mean_scores = []
     total_score = 0
-    won = False
+    # won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
     wonRound = False
@@ -108,7 +108,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
         final_move = agent.get_action(state_old)
 
         # perform move and get new state
-        reward, done, score = game.step(final_move)
+        reward, done, won = game.step(final_move)
         state_new = agent.get_state(game)
 
         # train short memory
@@ -119,12 +119,8 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
 
         if done:
             # train long memory, plot result
-            aiMoves = agent.aiMoves
-            randomMoves = agent.randomMoves
-            totalMoves = aiMoves + randomMoves
             agent.aiMoves = 0
             agent.randomMoves = 0
-            x,y = game.mouse.x, game.mouse.y
             game.reset()
             agent.n_games += 1
             agent.train_long_memory()
@@ -133,14 +129,10 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
                 agent.model.save()
                 wonRound = True
                 gameWhenWon = agent.n_games
+                return True, agent.n_games
 
             #if agent.n_games % (data.numberOfGames / 10) == 0:
                 #print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
-            plot_scores.append(score)
-            total_score += score
-            mean_score = total_score / agent.n_games
-            plot_mean_scores.append(mean_score)
-            plot(plot_scores, plot_mean_scores)
 
     return wonRound, gameWhenWon
 if __name__ == '__main__':
