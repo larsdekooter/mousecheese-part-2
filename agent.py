@@ -97,7 +97,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
     game = Game()
     wonRound = False
     gameWhenWon = numberOfGames
-    for i in trange(numberOfGames, desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}"):
+    for i in trange(numberOfGames, desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}".ljust(70, ' ')):
         # get old state
         state_old = agent.get_state(game)
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
         gamma = random.random()
         lr = random.uniform(0.0001, 0.1)
         maxMemory = int(random.uniform(10, 1_000_000))
-        hiddenSize = 2 ** random.randint(2, 10)
+        hiddenSize = 2 ** random.randint(2, 9)
         won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
         gameList.append([won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames])
     print(gameList)
