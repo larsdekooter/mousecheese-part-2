@@ -91,13 +91,13 @@ class Agent:
         return final_move
 
 
-def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
+def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
     # won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
     wonRound = False
     gameWhenWon = numberOfGames
-    for i in trange(numberOfGames):
+    for i in trange(numberOfGames, desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}"):
         # get old state
         state_old = agent.get_state(game)
 
@@ -134,13 +134,13 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames):
     return wonRound, gameWhenWon
 if __name__ == '__main__':
     gameList = []
-    won, nGames = train(data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames)
+    won, nGames = train(data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames, -1)
     gameList.append([won, nGames, data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames])
     for i in range(200):
         gamma = random.random()
         lr = random.uniform(0.0001, 0.1)
         maxMemory = int(random.uniform(10, 1_000_000))
         hiddenSize = 2 ** random.randint(2, 16)
-        won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames)
+        won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
         gameList.append([won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames])
     print(gameList)
