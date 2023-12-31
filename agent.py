@@ -19,13 +19,14 @@ class Agent:
         self.epsilon = 0 # randomness
         self.gamma = gamma # discount rate
         self.memory = deque(maxlen=maxMemory) # popleft()
-        self.model = Linear_QNet(9, hiddenSize, 4)
+        self.model = Linear_QNet(10, hiddenSize, 4)
         if os.path.exists("C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"):
             self.model.load_state_dict(torch.load('C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth'))
         self.trainer = QTrainer(self.model, lr=lr, gamma=gamma)
         self.decayStep = 0
         self.aiMoves = 0
         self.randomMoves = 0
+        self.lastMove = [0,0,0,0]
 
 
     def get_state(self, game: Game):
@@ -36,14 +37,17 @@ class Agent:
             (game.mouse.x, game.mouse.y - 100), # up
             (game.mouse.x, game.mouse.y + 100), # down
         ]
+        canMoveUp = game.mouse.y != 0
+        canMoveDown = game.mouse.y != 700
+        canMoveLeft = game.mouse.x != 0
+        canMoveRight = game.mouse.x != 700
 
         state = [
-            # Cheese direction
-            game.mouse.x < 700,
-            game.mouse.x > 700,
-            game.mouse.y < 700,
-            game.mouse.y > 700,
-
+            self.lastMove,
+            canMoveUp,
+            canMoveDown,
+            canMoveLeft,
+            canMoveRight,
             # Danger around
             aroundLocations[0] in data.catPositions,
             aroundLocations[1] in data.catPositions,
@@ -75,7 +79,7 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon =  data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(-data.decayRate * self.n_games)
+        self.epsilon =  data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(-data.decayRate * self.decayStep)
         final_move = [0,0,0,0]
         if np.random.rand() < self.epsilon:
             move = random.randint(0, 3)
@@ -88,6 +92,7 @@ class Agent:
             final_move[move] = 1
             self.aiMoves += 1
         self.decayStep += data.decayStep
+        self.lastMove = final_move
         return final_move
 
 

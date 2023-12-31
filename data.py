@@ -8,13 +8,13 @@ hiddenSize = 128  # Increased hidden layer size for more capacity
 lr = 0.0001  # Adjusted learning rate for stability
 maxEpsilon = 1
 minEpsilon = 0.01
-decayRate = 0.009
+decayRate = 0.001
 batchSize = 64  # Adjusted batch size for efficiency
 random = 200
 testLength = 6000
 invalidMovePunishment = -10000
 greaterThan = 0.1
-decayStep = 4
+decayStep = 1
 def getDistanceReward(distance):
     return 1.02 ** -distance  # Slightly increased reward decay
 
