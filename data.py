@@ -21,4 +21,4 @@ def getDistanceReward(distance):
 def getEfficiencyPenalty(distance):
     return 0.005 * distance  # Reduced efficiency penalty for exploration
 
-numberOfGames = 2000
+numberOfGames = 10000
