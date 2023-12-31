@@ -41,9 +41,19 @@ class Agent:
         canMoveDown = game.mouse.y != 700
         canMoveLeft = game.mouse.x != 0
         canMoveRight = game.mouse.x != 700
+        lastMove = -1
+
+        if self.lastMove[0] == 1:
+            lastMove = 0
+        elif self.lastMove[1] == 1:
+            lastMove = 1
+        elif self.lastMove[2] == 1:
+            lastMove = 2
+        elif self.lastMove[3] == 1:
+            lastMove = 3
 
         state = [
-            self.lastMove,
+            lastMove,
             canMoveUp,
             canMoveDown,
             canMoveLeft,
