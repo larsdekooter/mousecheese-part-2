@@ -184,13 +184,13 @@ if __name__ == "__main__":
             data.numberOfGames,
         ]
     )
-    # for i in range(1000):
-    #     gamma = random.random()
-    #     lr = 10 / (10 ** random.randint(1, 7))
-    #     maxMemory = int(random.uniform(10, 1_000_000))
-    #     hiddenSize = 2 ** random.randint(2, 8)
-    #     won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
-    #     gameList.append(
-    #         [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
-    #     )
-    # print(gameList)
+    for i in range(1000):
+        gamma = random.random()
+        lr = 10 / (10 ** random.randint(1, 7))
+        maxMemory = int(random.uniform(10, 1_000_000))
+        hiddenSize = 2 ** random.randint(2, 8)
+        won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
+        gameList.append(
+            [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
+        )
+    print(gameList)
