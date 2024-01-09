@@ -2,6 +2,7 @@ import pygame
 import time
 from data import cooldown
 
+
 class Mouse:
     def __init__(self, x, y):
         self.img = pygame.transform.scale(pygame.image.load("mouse.png"), (100, 100))
@@ -11,7 +12,7 @@ class Mouse:
         self.lastCooldown = None
         self.moves = 0
         self.noMove = False
-    
+
     def move(self, move):
         # [0 = UP,0 = DOWN,0 = LEFT,0 = RIGHT]
         # if self.cd:
@@ -19,20 +20,19 @@ class Mouse:
         #         self.cd = False
         #     else:
         #         return
-        if move[0] == 1 and self.y != 0: # up
+        if move[0] == 1 and self.y != 0:  # up
             self.y -= 100
-            self.moves +=1
-        elif move[1] == 1 and self.y != 700: #down
+            self.moves += 1
+        elif move[1] == 1 and self.y != 700:  # down
             self.y += 100
-            self.moves +=1
-        elif move[2] == 1 and self.x != 0: #left
-            self.x -=100
-            self.moves +=1
-        elif move[3] == 1 and self.x != 700: # right
+            self.moves += 1
+        elif move[2] == 1 and self.x != 0:  # left
+            self.x -= 100
+            self.moves += 1
+        elif move[3] == 1 and self.x != 700:  # right
             self.x += 100
-            self.moves +=1
+            self.moves += 1
 
-        
         if move[0] == 1 and self.y == 0:
             self.noMove = True
         elif move[1] == 1 and self.y == 700:
@@ -44,5 +44,5 @@ class Mouse:
         else:
             self.noMove = False
         # else:
-            # self.cd = False
-            # self.lastCooldown = None
+        # self.cd = False
+        # self.lastCooldown = None

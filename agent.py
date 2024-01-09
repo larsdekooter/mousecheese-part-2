@@ -8,34 +8,40 @@ from helper import plot
 import data
 import os
 from tqdm import trange
+
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
 LR = 0.001
 
-class Agent:
 
+class Agent:
     def __init__(self, gamma, lr, maxMemory, hiddenSize):
         self.n_games = 0
-        self.epsilon = 0 # randomness
-        self.gamma = gamma # discount rate
-        self.memory = deque(maxlen=maxMemory) # popleft()
+        self.epsilon = 0  # randomness
+        self.gamma = gamma  # discount rate
+        self.memory = deque(maxlen=maxMemory)  # popleft()
         self.model = Linear_QNet(10, hiddenSize, 4)
-        if os.path.exists("C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"):
-            self.model.load_state_dict(torch.load('C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth'))
+        if os.path.exists(
+            "C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"
+        ):
+            self.model.load_state_dict(
+                torch.load(
+                    "C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"
+                )
+            )
         self.trainer = QTrainer(self.model, lr=lr, gamma=gamma)
         self.decayStep = 0
         self.aiMoves = 0
         self.randomMoves = 0
-        self.lastMove = [0,0,0,0]
-
+        self.lastMove = [0, 0, 0, 0]
 
     def get_state(self, game: Game):
         distanceToCheese = game.getDistanceToCheese()
         aroundLocations = [
-            (game.mouse.x+100, game.mouse.y), # right
-            (game.mouse.x-100, game.mouse.y), # left
-            (game.mouse.x, game.mouse.y - 100), # up
-            (game.mouse.x, game.mouse.y + 100), # down
+            (game.mouse.x + 100, game.mouse.y),  # right
+            (game.mouse.x - 100, game.mouse.y),  # left
+            (game.mouse.x, game.mouse.y - 100),  # up
+            (game.mouse.x, game.mouse.y + 100),  # down
         ]
         canMoveUp = game.mouse.y != 0
         canMoveDown = game.mouse.y != 700
@@ -62,26 +68,32 @@ class Agent:
             aroundLocations[0] in data.catPositions,
             aroundLocations[1] in data.catPositions,
             aroundLocations[2] in data.catPositions,
-            aroundLocations[3] in data.catPositions,   
-
-            distanceToCheese 
+            aroundLocations[3] in data.catPositions,
+            distanceToCheese,
         ]
 
         return np.array(state, dtype=int)
 
-
     def remember(self, state, action, reward, next_state, done):
-        self.memory.append((state, action, reward, next_state, done)) # popleft if MAX_MEMORY is reached
+        self.memory.append(
+            (state, action, reward, next_state, done)
+        )  # popleft if MAX_MEMORY is reached
 
     def train_long_memory(self):
         if len(self.memory) > data.batchSize:
-            mini_sample = random.sample(self.memory, data.batchSize) # list of tuples
+            mini_sample = random.sample(self.memory, data.batchSize)  # list of tuples
         else:
             mini_sample = self.memory
 
         states, actions, rewards, next_states, dones = zip(*mini_sample)
-        self.trainer.train_step(np.array(states), np.array(actions), np.array(rewards), np.array(next_states), np.array(dones))
-        #for state, action, reward, nexrt_state, done in mini_sample:
+        self.trainer.train_step(
+            np.array(states),
+            np.array(actions),
+            np.array(rewards),
+            np.array(next_states),
+            np.array(dones),
+        )
+        # for state, action, reward, nexrt_state, done in mini_sample:
         #    self.trainer.train_step(state, action, reward, next_state, done)
 
     def train_short_memory(self, state, action, reward, next_state, done):
@@ -89,8 +101,10 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon =  data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(-data.decayRate * self.decayStep)
-        final_move = [0,0,0,0]
+        self.epsilon = data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(
+            -data.decayRate * self.decayStep
+        )
+        final_move = [0, 0, 0, 0]
         if np.random.rand() < self.epsilon:
             move = random.randint(0, 3)
             final_move[move] = 1
@@ -112,7 +126,10 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
     game = Game()
     wonRound = False
     gameWhenWon = numberOfGames
-    for i in trange(numberOfGames, desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}".ljust(70, ' ')):
+    for i in trange(
+        numberOfGames,
+        desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}".ljust(70, " "),
+    ):
         # get old state
         state_old = agent.get_state(game)
 
@@ -143,19 +160,35 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
                 gameWhenWon = agent.n_games
                 return True, agent.n_games
 
-            #if agent.n_games % (data.numberOfGames / 10) == 0:
-                #print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
+            # if agent.n_games % (data.numberOfGames / 10) == 0:
+            # print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
 
     return wonRound, gameWhenWon
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     gameList = []
-    won, nGames = train(data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames, -1)
-    gameList.append([won, nGames, data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames])
+    won, nGames = train(
+        data.gamma, data.lr, data.maxMemory, data.hiddenSize, data.numberOfGames, -1
+    )
+    gameList.append(
+        [
+            won,
+            nGames,
+            data.gamma,
+            data.lr,
+            data.maxMemory,
+            data.hiddenSize,
+            data.numberOfGames,
+        ]
+    )
     for i in range(1000):
         gamma = random.random()
         lr = 10 / (10 ** random.randint(1, 7))
         maxMemory = int(random.uniform(10, 1_000_000))
         hiddenSize = 2 ** random.randint(2, 8)
         won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
-        gameList.append([won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames])
+        gameList.append(
+            [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
+        )
     print(gameList)
