@@ -50,7 +50,7 @@ class Game:
             done = True
             won = True
         else:
-            reward = getDistanceReward(distance) - getEfficiencyPenalty(distance)
+            reward = getDistanceReward(distance)  # - getEfficiencyPenalty(distance)
             if self.mouse.noMove:
                 reward = invalidMovePunishment
         return reward, done, won

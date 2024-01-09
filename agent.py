@@ -20,7 +20,7 @@ class Agent:
         self.epsilon = 0  # randomness
         self.gamma = gamma  # discount rate
         self.memory = deque(maxlen=maxMemory)  # popleft()
-        self.model = Linear_QNet(10, hiddenSize, 4)
+        self.model = Linear_QNet(12, hiddenSize, 4)
         if os.path.exists(
             "C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"
         ):
@@ -65,11 +65,13 @@ class Agent:
             canMoveLeft,
             canMoveRight,
             # Danger around
-            aroundLocations[0] in data.catPositions,
-            aroundLocations[1] in data.catPositions,
-            aroundLocations[2] in data.catPositions,
-            aroundLocations[3] in data.catPositions,
+            aroundLocations[0] in data.catPositions,  # right
+            aroundLocations[1] in data.catPositions,  # left
+            aroundLocations[2] in data.catPositions,  # up
+            aroundLocations[3] in data.catPositions,  # down
             distanceToCheese,
+            game.mouse.x,
+            game.mouse.y,
         ]
 
         return np.array(state, dtype=int)
@@ -126,7 +128,7 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
     game = Game()
     wonRound = False
     gameWhenWon = numberOfGames
-    for i in trange(
+    for j in trange(
         numberOfGames,
         desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}".ljust(70, " "),
     ):
@@ -182,13 +184,13 @@ if __name__ == "__main__":
             data.numberOfGames,
         ]
     )
-    for i in range(1000):
-        gamma = random.random()
-        lr = 10 / (10 ** random.randint(1, 7))
-        maxMemory = int(random.uniform(10, 1_000_000))
-        hiddenSize = 2 ** random.randint(2, 8)
-        won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
-        gameList.append(
-            [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
-        )
-    print(gameList)
+    # for i in range(1000):
+    #     gamma = random.random()
+    #     lr = 10 / (10 ** random.randint(1, 7))
+    #     maxMemory = int(random.uniform(10, 1_000_000))
+    #     hiddenSize = 2 ** random.randint(2, 8)
+    #     won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
+    #     gameList.append(
+    #         [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
+    #     )
+    # print(gameList)
