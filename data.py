@@ -36,7 +36,7 @@ decayStep = 1
 
 
 def getDistanceReward(distance):
-    return 5 ** (3 - (distance / 100))  # Slightly increased reward decay
+    return 4 ** (10 - (distance / 100))  # Slightly increased reward decay
 
 
 def getEfficiencyPenalty(distance):

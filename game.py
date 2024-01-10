@@ -34,25 +34,25 @@ class Game:
         self.load()
         self.mouse.move(move)
         self.afterLoad()
-        done = self.checkDeath()
-        reward, done, won = self.getReward(done)
-
+        reward, done, won = self.getReward()
         return reward, done, won
 
-    def getReward(self, done):
+    def getReward(self):
         reward = 0
         distance = self.getDistanceToCheese()
         won = False
-        if done:
+        if self.checkDeath():
             reward = -cheeseReward
+            done = True
         elif self.checkCheese():
-            reward = cheeseReward
+            reward = cheeseReward + getDistanceReward(distance)
             done = True
             won = True
         else:
             reward = getDistanceReward(distance)  # - getEfficiencyPenalty(distance)
             if self.mouse.noMove:
                 reward = invalidMovePunishment
+            done = False
         return reward, done, won
 
     def getDistanceToCheese(self):
@@ -106,3 +106,29 @@ class Game:
         for position in catPositions:
             cats.append([self.catimg, position])
         return cats
+
+    def getAction(self, j):
+        return [
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 1, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [1, 0, 0, 0],
+            [1, 0, 0, 0],
+            [0, 0, 0, 1],
+            [0, 0, 0, 1],
+            [0, 1, 0, 0],
+            [0, 1, 0, 0],
+        ][j]

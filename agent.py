@@ -4,9 +4,7 @@ import numpy as np
 from collections import deque
 from game import Game
 from model import Linear_QNet, QTrainer
-from helper import plot
 import data
-import os
 from tqdm import trange
 
 MAX_MEMORY = 100_000
@@ -21,14 +19,6 @@ class Agent:
         self.gamma = gamma  # discount rate
         self.memory = deque(maxlen=maxMemory)  # popleft()
         self.model = Linear_QNet(12, hiddenSize, 4)
-        if os.path.exists(
-            "C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"
-        ):
-            self.model.load_state_dict(
-                torch.load(
-                    "C:/Users/Kooter/Documents/VSC Projects/A.I/snake - kopie/model/model.pth"
-                )
-            )
         self.trainer = QTrainer(self.model, lr=lr, gamma=gamma)
         self.decayStep = 0
         self.aiMoves = 0
@@ -184,7 +174,7 @@ if __name__ == "__main__":
             data.numberOfGames,
         ]
     )
-    for i in range(1000):
+    for i in range(100):
         gamma = random.random()
         lr = 10 / (10 ** random.randint(1, 7))
         maxMemory = int(random.uniform(10, 1_000_000))
