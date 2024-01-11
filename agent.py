@@ -93,11 +93,9 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon = data.minEpsilon + (data.maxEpsilon - data.minEpsilon) * np.exp(
-            -data.decayRate * self.decayStep
-        )
+        self.epsilon = 1000 - self.n_games
         final_move = [0, 0, 0, 0]
-        if np.random.rand() < self.epsilon:
+        if random.randint(0, 4000) < self.epsilon:
             move = random.randint(0, 3)
             final_move[move] = 1
             self.randomMoves += 1
