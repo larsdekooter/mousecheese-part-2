@@ -93,9 +93,9 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon = 1000 - self.n_games
+        self.epsilon = 5000 - self.decayStep
         final_move = [0, 0, 0, 0]
-        if random.randint(0, 4000) < self.epsilon:
+        if random.randint(0, 10000) < self.epsilon:
             move = random.randint(0, 3)
             final_move[move] = 1
             self.randomMoves += 1
@@ -110,14 +110,15 @@ class Agent:
         return final_move
 
 
-def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
+def train(gamma, lr, maxMemory, hiddenSize, numberOfSteps, i):
     # won = False
     agent = Agent(gamma, lr, maxMemory, hiddenSize)
     game = Game()
     wonRound = False
-    gameWhenWon = numberOfGames
+    gameWhenWon = numberOfSteps
     for j in trange(
-        numberOfGames,
+        # 22,
+        numberOfSteps,
         desc=f"{i}: {gamma}, {lr}, {maxMemory}, {hiddenSize}".ljust(70, " "),
     ):
         # get old state
@@ -125,7 +126,6 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfGames, i):
 
         # get move
         final_move = agent.get_action(state_old)
-
         # perform move and get new state
         reward, done, won = game.step(final_move)
         state_new = agent.get_state(game)
@@ -172,13 +172,15 @@ if __name__ == "__main__":
             data.numberOfGames,
         ]
     )
-    for i in range(100):
-        gamma = random.random()
-        lr = 10 / (10 ** random.randint(1, 7))
-        maxMemory = int(random.uniform(10, 1_000_000))
-        hiddenSize = 2 ** random.randint(2, 8)
-        won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
-        gameList.append(
-            [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
-        )
-    print(gameList)
+
+    def RNG():
+        for i in range(100):
+            gamma = random.random()
+            lr = 10 / (10 ** random.randint(1, 7))
+            maxMemory = int(random.uniform(10, 1_000_000))
+            hiddenSize = 2 ** random.randint(2, 8)
+            won, nGames = train(gamma, lr, maxMemory, hiddenSize, data.numberOfGames, i)
+            gameList.append(
+                [won, nGames, gamma, lr, maxMemory, hiddenSize, data.numberOfGames]
+            )
+        print(gameList)
