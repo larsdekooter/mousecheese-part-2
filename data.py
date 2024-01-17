@@ -23,7 +23,7 @@ rewardNerf = 5
 gamma = 0.9
 maxMemory = 100_000
 hiddenSize = 6  # Increased hidden layer size for more capacity
-lr = 0.015  # Adjusted learning rate for stability
+lr = 0.00001  # Adjusted learning rate for stability
 maxEpsilon = 1
 minEpsilon = 0.01
 decayRate = 0.001
@@ -33,6 +33,7 @@ testLength = 6000
 invalidMovePunishment = -10000
 greaterThan = 0.1
 decayStep = 1
+epsilon = 10000
 
 
 def getDistanceReward(distance):

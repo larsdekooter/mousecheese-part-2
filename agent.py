@@ -93,7 +93,7 @@ class Agent:
 
     def get_action(self, state):
         # random moves: tradeoff exploration / exploitation
-        self.epsilon = 5000 - self.decayStep
+        self.epsilon = data.epsilon - self.decayStep
         final_move = [0, 0, 0, 0]
         if random.randint(0, 10000) < self.epsilon:
             move = random.randint(0, 3)
@@ -106,7 +106,6 @@ class Agent:
             final_move[move] = 1
             self.aiMoves += 1
         self.decayStep += data.decayStep
-        self.lastMove = final_move
         return final_move
 
 
@@ -123,9 +122,9 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfSteps, i):
     ):
         # get old state
         state_old = agent.get_state(game)
-
         # get move
         final_move = agent.get_action(state_old)
+        agent.lastMove = final_move
         # perform move and get new state
         reward, done, won = game.step(final_move)
         state_new = agent.get_state(game)
@@ -150,8 +149,8 @@ def train(gamma, lr, maxMemory, hiddenSize, numberOfSteps, i):
                 gameWhenWon = agent.n_games
                 return True, agent.n_games
 
-            # if agent.n_games % (data.numberOfGames / 10) == 0:
-            # print('Game', agent.n_games, 'Won', score, "Epsilon", agent.epsilon, "%", round(aiMoves/totalMoves * 100.0, 5), final_move, x, y)
+            if agent.n_games % 2000 == 0:
+                agent.trainer.lr = agent.trainer.lr / 2
 
     return wonRound, gameWhenWon
 
